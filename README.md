@@ -14,17 +14,10 @@ Run [Velocidex Velociraptor](https://github.com/Velocidex/velociraptor) server w
   
   `docker exec -it velociraptor ./velociraptor --config server.config.yaml user add user1 user1 --role administrator`
 
-#### Notes:
+#### Docker Run
 
-Linux, Mac, and Windows binaries are located in `/velociraptor/clients`, which should be mapped to the host in the `./velociraptor` directory if using `docker-compose`.  There should also be versions of each automatically repacked based on the server configuration.
+You can run the container alone by the following
 
-Once started, edit `server.config.yaml` in `/velociraptor`, then run `docker-compose down/up` for the server to reflect the changes
+`docker build . -t velociraptor`
 
-#### Docker image
-To pull only the Docker image:
-
-`docker pull wlambert/velociraptor`
-
-To pull a specific version of the Docker image:
-
-`docker pull wlambert/velociraptor:0.6.8-2`
+`docker run -e "VELOX_USER=admin" -e "VELOX_PASSWORD=admin" -e "VELOX_ROLE=administrator" -e "VELOX_SERVER_URL=https://VelociraptorServer:8000/" -e "VELOX_FRONTEND_HOSTNAME=VelociraptorServer" -p 8889:8889 -p 8000:8000 -p 8899:8899 velociraptor`
