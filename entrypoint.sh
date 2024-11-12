@@ -5,6 +5,7 @@ PUBLIC_PATH="public"
 LOG_DIR="/logs/velociraptor"
 DATASTORE_LOCATION="./"
 FILESTORE_DIRECTORY="./"
+USER_DATA="/user_data"
 CLIENT_DIR="/user_data/clients"
 
 #Install required components
@@ -13,7 +14,7 @@ apt install jq -y
 # Make Folders (If they dont already exist)
 mkdir -p $LOG_DIR
 mkdir -p $CLIENT_DIR
-mkdir -p $CLIENT_DIR/config
+mkdir -p $USER_DATA/config
 
 # Move binaries into place
 cp /opt/velociraptor/linux/velociraptor . && chmod +x velociraptor
@@ -57,7 +58,7 @@ sed -i 's/api_connection_string:.*/api_connection_string: velociraptor:8001/g' /
 ./velociraptor config repack --msi $CLIENT_DIR/windows/velociraptor_client.msi client.config.yaml $CLIENT_DIR/windows/velociraptor_client_repacked.msi
 
 # Copy Config files into User Directory
-cp *.config.yaml $CLIENT_DIR/config/
+cp *.config.yaml $USER_DATA/config/
 
 # Set Permissions on files
 chmod -R a+r $CLIENT_DIR
