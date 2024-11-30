@@ -22,6 +22,12 @@ There are two ways to run this container, via docker-compose and docker run.
 
 The container can be run stand alone if you wish. To do this, you build and then pass in the environment variables as part of the run command. 
 - `docker build . -t velociraptor`
+
+> [!NOTE]
+> By default, the container will build the latest version of Velociraptor. 
+> You can specify a specific version by using build args. For example to build v0.7.1 add the command `--build-arg VELOCIRAPTOR_VERSION=0.7.1` to the build command 
+> Versions can be found at https://github.com/Velocidex/velociraptor/releases
+
 - ```
     docker run --rm \
 	-e "VELOX_USER=admin" \
