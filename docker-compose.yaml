@@ -4,6 +4,9 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
+      args:
+        - VELOCIRAPTOR_VERSION=${VELOCIRAPTOR_VERSION}
+        - UBUNTU_VERSION=${UBUNTU_VERSION}
     volumes:
       - ./velociraptor:/velociraptor/:rw
       - ./logs:/logs/:rw

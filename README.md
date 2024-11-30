@@ -3,7 +3,9 @@ Run [Velocidex Velociraptor](https://github.com/Velocidex/velociraptor) server w
 
 ## Options to Run
 
-There are two ways to run this container, via docker-compose and docker run.
+There are two ways to run this container, via 
+- docker-compose, or
+- docker run.
 
 ### Docker-compose
 
@@ -24,9 +26,19 @@ The container can be run stand alone if you wish. To do this, you build and then
 - `docker build . -t velociraptor`
 
 > [!NOTE]
-> By default, the container will build the latest version of Velociraptor. 
-> You can specify a specific version by using build args. For example to build v0.7.1 add the command `--build-arg VELOCIRAPTOR_VERSION=0.7.1` to the build command 
+> By default, the container will build using the latest versions of both Velociraptor and Ubunutu.
+>
+> Specific versions of both can be specified using build args. 
+> For example to Velociraptor build v0.7.1 add the arguement `--build-arg VELOCIRAPTOR_VERSION=0.7.1` to the build command 
 > Versions can be found at https://github.com/Velocidex/velociraptor/releases
+>
+> It is the same for Ubuntu Versions. 
+> Example: `--build-arg UBUNTU_VERSION=24.04`
+>
+> Example `docker build --build-arg VELOCIRAPTOR_VERSION=0.7.1 --build-arg UBUNTU_VERSION=22.04 . -t velociraptor-0.7.1`
+
+Start the container passing in the necessary options.
+Make sure to update the -e, -p and --mount options
 
 - ```
     docker run --rm \
@@ -43,35 +55,33 @@ The container can be run stand alone if you wish. To do this, you build and then
 	--mount type=bind,source=./user_data,target=/user_data \
 	velociraptor
 	```
-	
-Make sure to update the -e, -p and --mount options 
 
 ## Possible Environment variables
 
 There are a number of environment variables that can be used to customise how the container works. They can be set in either `docker-compose` or `docker run`
 
-- BIND_ADDRESS : What IP address should the service bind to. Default is `0.0.0.0`
+- `**BIND_ADDRESS**` : What IP address should the service bind to. Default is `0.0.0.0`
 
-- BASE_PATH : Serve frontend from this subdirectory. Default `/` 
+- `**BASE_PATH**` : Serve frontend from this subdirectory. Default `/` 
 
-- LOG_DIR : Directory to store log files. Default is `/logs/velociraptor}`
+- `**LOG_DIR**` : Directory to store log files. Default is `/logs/velociraptor}`
 
-- DATASTORE_LOCATION : The directory used to store small files. Default is `./` 
+- `**DATASTORE_LOCATION**` : The directory used to store small files. Default is `./` 
 
-- FILESTORE_DIRECTORY : The directory for larger result sets and uploads. Often set as the same as DATASTORE_LOCATION. Default is `./`
+- `**FILESTORE_DIRECTORY**` : The directory for larger result sets and uploads. Often set as the same as DATASTORE_LOCATION. Default is `./`
 
-- USER_DATA : A directory to store a copy of the servers configuration files. This is here to allow you to share these files elsewhere without having to expose the running of the server. Default `/user_data`
+- `**USER_DATA**` : A directory to store a copy of the servers configuration files. This is here to allow you to share these files elsewhere without having to expose the running of the server. Default `/user_data`
 
-- CLIENT_DIR : A directory to store a copy of the client installers. This is here to allow you to share these files elsewhere without having to expose the running of the server. Default `/user_data/clients`
+- `**CLIENT_DIR**` : A directory to store a copy of the client installers. This is here to allow you to share these files elsewhere without having to expose the running of the server. Default `/user_data/clients`
 
-- VELOX_USER : A username to access the server. Default `admin`
+- `**VELOX_USER**` : A username to access the server. Default `admin`
 
-- VELOX_PASSWORD : A password to access the server. Default `admin`
+- `**VELOX_PASSWORD**` : A password to access the server. Default `admin`
 
-- VELOX_ROLE : The roll for the account listed above. Default `administrator`
+- `**VELOX_ROLE**` : The roll for the account listed above. Default `administrator`
 
-- VELOX_SERVER_URL : The URL of the server which is used in the client config to locate the server. Should include port. Default `https://VelociraptorServer:8000/`
+- `**VELOX_SERVER_URL**` : The URL of the server which is used in the client config to locate the server. Should include port. Default `https://VelociraptorServer:8000/`
 
-- VELOX_FRONTEND_HOSTNAME : Publicly accessible hostname of frontend. Default `VelociraptorServer`
+- `**VELOX_FRONTEND_HOSTNAME**` : Publicly accessible hostname of frontend. Default `VelociraptorServer`
 
 
