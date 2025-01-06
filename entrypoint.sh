@@ -10,7 +10,8 @@ log() {
 log "Starting setup..."	
 
 BIND_ADDRESS="${BIND_ADDRESS:-0.0.0.0}" 
-BASE_PATH="${BASE_PATH:-/}" 
+FRONTEND_BASE_PATH="${FRONTEND_BASE_PATH:-/}" 
+GUI_BASE_PATH="${GUI_BASE_PATH:-/}" 
 LOG_DIR="${LOG_DIR:-/logs/velociraptor}" 
 DATASTORE_LOCATION="${DATASTORE_LOCATION:-./}" 
 FILESTORE_DIRECTORY="${FILESTORE_DIRECTORY:-./}" 
@@ -45,7 +46,7 @@ mkdir -p $CLIENT_DIR/windows && rsync -a /opt/velociraptor/windows/velociraptor_
 log "Checking for existing server config..."
 if [ ! -f server.config.yaml ]; then
 	log "Server Config not found. Generating..."
-	./velociraptor config generate > server.config.yaml --merge '{"Frontend":{"base_path":"'$BASE_PATH'", "hostname":"'$VELOX_FRONTEND_HOSTNAME'"},"API":{"bind_address":"'$BIND_ADDRESS'"},"GUI":{"bind_address":"'$BIND_ADDRESS'"},"Monitoring":{"bind_address":"'$BIND_ADDRESS'"},"Logging":{"output_directory":"'$LOG_DIR'","separate_logs_per_component":true},"Client":{"server_urls":["'$VELOX_SERVER_URL'"],"use_self_signed_ssl":true}, "Datastore":{"location":"'$DATASTORE_LOCATION'", "filestore_directory":"'$FILESTORE_DIRECTORY'"}}'
+	./velociraptor config generate > server.config.yaml --merge '{"Frontend":{"base_path":"'$FRONTEND_BASE_PATH'", "hostname":"'$VELOX_FRONTEND_HOSTNAME'"},"API":{"bind_address":"'$BIND_ADDRESS'"},"GUI":{"base_path":"'$GUI_BASE_PATH'", "public_url":"https://localhost'$GUI_BASE_PATH'/app/index.html", "bind_address":"'$BIND_ADDRESS'"},"Monitoring":{"bind_address":"'$BIND_ADDRESS'"},"Logging":{"output_directory":"'$LOG_DIR'","separate_logs_per_component":true},"Client":{"server_urls":["'$VELOX_SERVER_URL'"],"use_self_signed_ssl":true}, "Datastore":{"location":"'$DATASTORE_LOCATION'", "filestore_directory":"'$FILESTORE_DIRECTORY'"}}'
         #sed -i "s#https://localhost:8000/#$VELOX_CLIENT_URL#" server.config.yaml
 	sed -i 's#/tmp/velociraptor#.#'g server.config.yaml
 	./velociraptor --config server.config.yaml user add $VELOX_USER $VELOX_PASSWORD --role $VELOX_ROLE

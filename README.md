@@ -62,7 +62,9 @@ There are a number of environment variables that can be used to customise how th
 
 - **BIND_ADDRESS** : What IP address should the service bind to. Default is `0.0.0.0`
 
-- **BASE_PATH** : Serve frontend from this subdirectory. Default `/` 
+- **FRONTEND_BASE_PATH** : Serve client frontend from this subdirectory. Default `/` 
+
+- **GUI_BASE_PATH** : Serve GUI frontend from this subdirectory. Default `/`
 
 - **LOG_DIR** : Directory to store log files. Default is `/logs/velociraptor}`
 
