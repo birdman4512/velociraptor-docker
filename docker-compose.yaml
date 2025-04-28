@@ -1,0 +1,32 @@
+services:
+  velociraptor:
+    container_name: velociraptor
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./stack-data/velociraptor:/velociraptor/:rw
+      - ./stack-data/logs:/logs/:rw
+      - ./stack-data/user:/user_data/:rw
+      - ./entrypoint.sh:/entrypoint.sh:ro,Z
+    environment:
+      - VELOX_ADDRESS=${VELOX_ADDRESS}
+      - BIND_ADDRESS=${BIND_ADDRESS}
+      - VELOX_FRONTEND_PUBLIC_PATH=${VELOX_FRONTEND_PUBLIC_PATH}
+      - VELOX_GUI_BASE_PATH=${VELOX_GUI_BASE_PATH}
+      - VELOX_LOG_DIR=${VELOX_LOG_DIR}
+      - VELOX_DATASTORE_LOCATION=${VELOX_DATASTORE_LOCATION}
+      - VELOX_FILESTORE_DIRECTORY=${VELOX_FILESTORE_DIRECTORY} 
+      - VELOX_USER_DATA=${VELOX_USER_DATA}
+      - VELOX_CLIENT_DIR=${VELOX_CLIENT_DIR}
+      #These are just a safetynet and are not very secure. They should be overridden by environment variables. 
+      - VELOX_USER=${VELOX_USER}
+      - VELOX_PASSWORD=${VELOX_PASSWORD}
+      - VELOX_ROLE=${VELOX_ROLE}
+      - VELOX_SERVER_URL=${VELOX_SERVER_URL}
+      - VELOX_FRONTEND_HOSTNAME=${VELOX_FRONTEND_HOSTNAME}
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+      - "8889:8889"
+    restart: unless-stopped

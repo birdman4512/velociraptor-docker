@@ -9,21 +9,24 @@ log() {
 #Setup
 log "Starting setup..."	
 
-VELOX_ADDRESS="${VELO_ADDRESS:-localhost}"
-BIND_ADDRESS="${BIND_ADDRESS:-0.0.0.0}" 
-VELOX_FRONTEND_PUBLIC_PATH="${VELOX_FRONTEND_PUBLIC_PATH:-public}"
-VELOX_FRONTEND_HOSTNAME="${VELOX_FRONTEND_HOSTNAME:-VelociraptorServer}"
-VELOX_GUI_BASE_PATH="${VELOX_GUI_BASE_PATH:-/}" 
-LOG_DIR="${LOG_DIR:-/logs/velociraptor}" 
-DATASTORE_LOCATION="${DATASTORE_LOCATION:-./}" 
-FILESTORE_DIRECTORY="${FILESTORE_DIRECTORY:-./}" 
-USER_DATA="${USER_DATA:-/user_data}" 
-CLIENT_DIR="${CLIENT_DIR:-/user_data/clients}"
+VELOX_ADDRESS=${VELO_ADDRESS:-localhost:8889}
+BIND_ADDRESS=${BIND_ADDRESS:-0.0.0.0}
+VELOX_FRONTEND_PUBLIC_PATH=${VELOX_FRONTEND_PUBLIC_PATH:-public}
+VELOX_FRONTEND_HOSTNAME=${VELOX_FRONTEND_HOSTNAME:-VelociraptorServer}
+VELOX_GUI_BASE_PATH=${VELOX_GUI_BASE_PATH:-}
+LOG_DIR=${VELOX_LOG_DIR:-/logs/velociraptor}
+DATASTORE_LOCATION=${VELOX_DATASTORE_LOCATION:-./}
+FILESTORE_DIRECTORY=${VELOX_FILESTORE_DIRECTORY:-./}
+USER_DATA=${VELOX_USER_DATA:-/user_data}
+CLIENT_DIR=${VELOX_CLIENT_DIR:-/user_data/clients}
 #These are just a safetynet and are not very secure. They should be overridden by environment variables. 
-VELOX_USER="${VELOX_USER:-admin}"
-VELOX_PASSWORD="${VELOX_PASSWORD:-admin}"
-VELOX_ROLE="${VELOX_ROLE:-administrator}"
-VELOX_SERVER_URL="${VELOX_SERVER_URL:-https://VelociraptorServer:8000/}"
+VELOX_USER=${VELOX_USER:-admin}
+VELOX_PASSWORD=${VELOX_PASSWORD:-admin}
+VELOX_ROLE=${VELOX_ROLE:-administrator}
+VELOX_SERVER_URL=${VELOX_SERVER_URL:-https://VelociraptorServer:8000/}
+
+## TODO - Work out VELOX_SERVER_URL based on VELOX_ADDRESS
+PUBLIC_URL="https://"$VELOX_ADDRESS$VELOX_GUI_BASE_PATH"/app/index.html"
 
 #Install required components
 log "Installing required components..."
@@ -46,7 +49,8 @@ mkdir -p $CLIENT_DIR/windows && rsync -a /opt/velociraptor/windows/velociraptor_
 log "Checking for existing server config..."
 if [ ! -f server.config.yaml ]; then
 	log "Server Config not found. Generating..."
-	./velociraptor config generate > server.config.yaml --merge '{"Frontend":{"public_path":"'$VELOX_FRONTEND_PUBLIC_PATH'", "hostname":"'$VELOX_FRONTEND_HOSTNAME'"},"API":{"bind_address":"'$BIND_ADDRESS'"},"GUI":{"base_path":"'$VELOX_GUI_BASE_PATH'", "public_url":"https://'$VELOX_ADDRESS'/'$VELOX_GUI_BASE_PATH'/app/index.html", "bind_address":"'$BIND_ADDRESS'"},"Monitoring":{"bind_address":"'$BIND_ADDRESS'"},"Logging":{"output_directory":"'$LOG_DIR'","separate_logs_per_component":true},"Client":{"server_urls":["'$VELOX_SERVER_URL'"],"use_self_signed_ssl":true}, "Datastore":{"location":"'$DATASTORE_LOCATION'", "filestore_directory":"'$FILESTORE_DIRECTORY'"}}'
+  
+	./velociraptor config generate > server.config.yaml --merge '{"Frontend":{"public_path":"'$VELOX_FRONTEND_PUBLIC_PATH'", "hostname":"'$VELOX_FRONTEND_HOSTNAME'"},"API":{"bind_address":"'$BIND_ADDRESS'"},"GUI":{"base_path":"'$VELOX_GUI_BASE_PATH'", "public_url":"'$PUBLIC_URL'", "bind_address":"'$BIND_ADDRESS'"},"Monitoring":{"bind_address":"'$BIND_ADDRESS'"},"Logging":{"output_directory":"'$LOG_DIR'","separate_logs_per_component":true},"Client":{"server_urls":["'$VELOX_SERVER_URL'"],"use_self_signed_ssl":true}, "Datastore":{"location":"'$DATASTORE_LOCATION'", "filestore_directory":"'$FILESTORE_DIRECTORY'"}}'
         #sed -i "s#https://localhost:8000/#$VELOX_CLIENT_URL#" server.config.yaml
 	sed -i 's#/tmp/velociraptor#.#'g server.config.yaml
 	./velociraptor --config server.config.yaml user add $VELOX_USER $VELOX_PASSWORD --role $VELOX_ROLE
@@ -83,7 +87,8 @@ log "Repacking clients..."
 
 # Copy Config files into User Directory
 log "Copying config files..."
-cp *.config.yaml $USER_DATA/config/
+cp client.config.yaml $USER_DATA/config/
+cp api.config.yaml $USER_DATA/config/
 
 # Set Permissions on files
 log "Setting permissions..."
